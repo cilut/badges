@@ -18,12 +18,16 @@ const configuration_workflow = () =>
       {
         name: "Badge relation",
         form: async (context) => {
+          console.log("Table ID:", context.table_id); // Debug log
           const table = await Table.findOne({ id: context.table_id });
-          const mytable = table;
+          if (!table) {
+            console.error("Table not found for ID:", context.table_id);
+            return new Form({ fields: [] }); // Handle the error
+          }
+
           const fields = await table.getFields();
           const { child_field_list, child_relations } =
             await table.get_child_relations();
-
           // table with like: parent user with user, no other required
           let table_opts = [];
           // user field in like table.
